@@ -8,7 +8,6 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new
-
   end
 
   def create
@@ -23,7 +22,6 @@ class ItemsController < ApplicationController
   def show
     @item = Item.find(params[:id])
   end
-  
 
   private
 
