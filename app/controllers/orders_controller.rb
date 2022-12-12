@@ -1,5 +1,7 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
+  before_action :item_eq_user
+  before_action :item_bought
   def index
     @item = Item.find(params[:item_id])
     @purchase_order = PurchaseOrder.new
@@ -30,5 +32,18 @@ class OrdersController < ApplicationController
       card: params_purchase[:token],
       currency: 'jpy'
     )
+  end
+
+  def item_eq_user
+    @item = Item.find(params[:item_id]) 
+    unless @item.user_id != current_user.id
+      redirect_to root_path
+    end
+  end
+
+  def item_bought
+    if Purchase.find_by(item_id: params[:item_id]) != nil
+      redirect_to root_path
+    end
   end
 end
