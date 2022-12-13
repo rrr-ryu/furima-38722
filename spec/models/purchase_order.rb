@@ -63,7 +63,19 @@ RSpec.describe PurchaseOrder, type: :model do
       end
 
       it 'phone_numberの正規表現が守られてない時' do
-        @purchase_order.phone_number = ''
+        @purchase_order.phone_number = '090-1234-5678'
+        @purchase_order.valid?
+        expect(@purchase_order.errors.full_messages).to include('Phone number is invalid')
+      end
+
+      it 'phone_numberが9桁以下の時' do
+        @purchase_order.phone_number = '090123456'
+        @purchase_order.valid?
+        expect(@purchase_order.errors.full_messages).to include('Phone number is invalid')
+      end
+
+      it 'phone_numberが12桁以上の時' do
+        @purchase_order.phone_number = '090123456789'
         @purchase_order.valid?
         expect(@purchase_order.errors.full_messages).to include('Phone number is invalid')
       end

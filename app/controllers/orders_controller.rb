@@ -2,13 +2,12 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :item_eq_user
   before_action :item_bought
+  before_action :set_item
   def index
-    @item = Item.find(params[:item_id])
     @purchase_order = PurchaseOrder.new
   end
 
   def create
-    @item = Item.find(params[:item_id])
     @purchase_order = PurchaseOrder.new(params_purchase)
     if @purchase_order.valid?
       pay_item
@@ -24,6 +23,10 @@ class OrdersController < ApplicationController
   def params_purchase
     params.require(:purchase_order).permit(:post_code, :sender_id, :town, :house_number, :building_number, :phone_number)
           .merge(user_id: current_user.id, item_id: params[:item_id], token: params[:token])
+  end
+
+  def set_item
+    @item = Item.find(params[:item_id])
   end
 
   def pay_item
