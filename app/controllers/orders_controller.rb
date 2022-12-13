@@ -1,8 +1,8 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_item
   before_action :item_eq_user
   before_action :item_bought
-  before_action :set_item
   def index
     @purchase_order = PurchaseOrder.new
   end
@@ -39,7 +39,6 @@ class OrdersController < ApplicationController
   end
 
   def item_eq_user
-    @item = Item.find(params[:item_id])
     return unless @item.user_id == current_user.id
 
     redirect_to root_path

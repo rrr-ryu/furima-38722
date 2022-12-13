@@ -6,7 +6,6 @@ class ItemsController < ApplicationController
   def index
     @items = Item.all.order(created_at: :DESC)
     @count = Item.count
-    @purchases = Purchase.all
   end
 
   def new
@@ -23,7 +22,6 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @purchases = Purchase.all
   end
 
   def edit
@@ -55,10 +53,7 @@ class ItemsController < ApplicationController
   end
 
   def move_to_index
-    @purchase = Purchase.find_by(item_id: @item.id)
-    if current_user.id != @item.user.id
-      redirect_to root_path
-    elsif !@purchase.nil?
+    if current_user.id != @item.user.id || !@item.purchase.nil?
       redirect_to root_path
     end
   end
