@@ -58,7 +58,7 @@ class ItemsController < ApplicationController
     @purchase = Purchase.find_by(item_id: @item.id)
     if current_user.id != @item.user.id
       redirect_to root_path
-    elsif @purchase !=nil
+    elsif !@purchase.nil?
       redirect_to root_path
     end
   end

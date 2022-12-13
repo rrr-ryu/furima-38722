@@ -20,13 +20,14 @@ class OrdersController < ApplicationController
   end
 
   private
+
   def params_purchase
     params.require(:purchase_order).permit(:post_code, :sender_id, :town, :house_number, :building_number, :phone_number)
           .merge(user_id: current_user.id, item_id: params[:item_id], token: params[:token])
-  end  
+  end
 
   def pay_item
-    Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
+    Payjp.api_key = ENV['PAYJP_SECRET_KEY']
     Payjp::Charge.create(
       amount: @item.price,
       card: params_purchase[:token],
@@ -35,15 +36,15 @@ class OrdersController < ApplicationController
   end
 
   def item_eq_user
-    @item = Item.find(params[:item_id]) 
-    if @item.user_id == current_user.id
-      redirect_to root_path
-    end
+    @item = Item.find(params[:item_id])
+    return unless @item.user_id == current_user.id
+
+    redirect_to root_path
   end
 
   def item_bought
-    if Purchase.find_by(item_id: params[:item_id]) != nil
-      redirect_to root_path
-    end
+    return unless Purchase.find_by(item_id: params[:item_id]) != nil
+
+    redirect_to root_path
   end
 end
